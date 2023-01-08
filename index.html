@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    
+</head>
+<body>
+    <h3>Provide a location via longitude and latitude</h3>
+    <label>Latitude: </label>
+    <input type="text" id="lat">
+    <br><br>
+    <label>Longitude: </label>
+    <input type="text" id="long">
+    <br><br>
+    <button onclick="apiCall()">GO</button>
+    <br>
+    <p id="location">Location: </p>
+    <p id="weather">Weather: </p>
+    <p id="temp">Temperature: </p>
+    <p id="sunrise">Sunrise: </p>
+    <p id="sunset">Sunset: </p>
+
+
+    <script>
+        function apiCall() {
+            var long = document.getElementById("long").value;
+            var lat = document.getElementById("lat").value;
+            //var lat = 43.6532;
+            //var long = -79.3832;
+            var apiCall = 'https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + long + '&appid=e402eec2b7a17022e9ef47b71fbe1a36'
+            fetch(apiCall)
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    response(data);
+                });
+        }
+        function response(response) {
+            var city = response.name;
+            var country = response.sys.country;
+            var weather = response.weather[0].description;
+            var temp = Math.round(response.main.temp - 273.15) + '°C';
+            
+            var sunrise = new Date(response.sys.sunrise * 1000).toLocaleTimeString();
+            var sunset =  new Date(response.sys.sunset * 1000).toLocaleTimeString();
+            
+            document.getElementById("location").innerHTML = 'Location: ' + city + ', ' + country;
+            document.getElementById("weather").innerHTML = 'Weather: ' + weather;
+            document.getElementById("temp").innerHTML = 'Temperature: ' + temp;
+            
+            document.getElementById("sunrise").innerHTML = 'Sunrise at ' + sunrise;
+            
+            document.getElementById("sunset").innerHTML = 'Sunset at ' + sunset;
+        }
+    </script>
+</body>
+</html>
